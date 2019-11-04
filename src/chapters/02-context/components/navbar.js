@@ -1,23 +1,29 @@
 import React from "react";
 import { Link } from "@reach/router";
 
-export default function NavBar({ isAuthenticated, login, logout }) {
+import { AppConsumer } from "../context"
+
+export default function NavBar() {
   return (
-    <nav className="navbar">
-      <Link to={"/"}>
-        <h1 className="nav-logo">Formidamail</h1>
-      </Link>
-      <ul className="nav-items">
-        {isAuthenticated ? (
-          <li className="nav-item" onClick={logout}>
-            logout
-          </li>
-        ) : (
-          <li className="nav-item" onClick={login}>
-            Log in
-          </li>
-        )}
-      </ul>
-    </nav>
+    <AppConsumer>
+      {({ isAuthenticated, login, logout }) => (
+        <nav className="navbar">
+          <Link to={"/"}>
+            <h1 className="nav-logo">Formidamail</h1>
+          </Link>
+          <ul className="nav-items">
+            {isAuthenticated ? (
+              <li className="nav-item" onClick={logout}>
+                logout
+              </li>
+            ) : (
+              <li className="nav-item" onClick={login}>
+                Log in
+              </li>
+            )}
+          </ul>
+        </nav>
+      )}
+    </AppConsumer>
   );
 }

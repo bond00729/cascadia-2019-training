@@ -1,5 +1,5 @@
-// import React from "react";
+import React from "react";
 
 export default function Denied() {
-  return null;
+  return <p className="denied">Please login to see emails.</p>;
 }

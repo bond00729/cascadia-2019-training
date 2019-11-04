@@ -1,55 +1,42 @@
-import React, { Component, createContext } from "react";
-import { generateEmail, emails } from "../../../utils/email";
+import React, { createContext, useState, useEffect } from "react";
+import { generateEmail, emails as mockData } from "../../../utils/email";
 
 export const AppContext = createContext();
 export const AppConsumer = AppContext.Consumer;
 
-export default class AppProvider extends Component {
-  state = {
-    isAuthenticated: this.props.isAuthenticated || false,
-    emails: emails
-  };
+const AppProvider = ({ isAuth, ...rest }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(isAuth || false);
+  const [emails, setEmails] = useState(mockData);
 
-  componentDidMount() {
-    this.polling = setInterval(() => {
-      const { emails } = this.state;
+  useEffect(() => {
+    const polling = setInterval(() => {
       if (emails.length < 5) {
-        this.setState({
-          emails: [...emails, generateEmail()]
-        });
+        setEmails([...emails, generateEmail()]);
       }
     }, 4000);
-  }
 
-  componentWillUnmount() {
-    clearInterval(this.polling);
-  }
+    return () => {
+      clearInterval(polling);
+    }
+  }, [emails])
 
-  removeEmail = id => {
-    const filteredEmails = this.state.emails.filter(email => {
+  const removeEmail = id => {
+    const filteredEmails = emails.filter(email => {
       return email.id !== id;
     });
 
-    this.setState({ emails: filteredEmails });
+    setEmails(filteredEmails);
+  };
+  
+  const value = {
+    isAuthenticated: isAuthenticated,
+    login: () => setIsAuthenticated(true),
+    logout: () => setIsAuthenticated(false),
+    emails: emails,
+    removeEmail: removeEmail
   };
 
-  login = () => {
-    this.setState({ isAuthenticated: true });
-  };
-
-  logout = () => {
-    this.setState({ isAuthenticated: false });
-  };
-
-  render() {
-    const value = {
-      isAuthenticated: this.state.isAuthenticated,
-      login: this.login,
-      logout: this.logout,
-      emails: this.state.emails,
-      removeEmail: this.removeEmail
-    };
-
-    return <AppContext.Provider value={value} {...this.props} />;
-  }
+  return <AppContext.Provider value={value} {...rest} />;
 }
+
+export default AppProvider

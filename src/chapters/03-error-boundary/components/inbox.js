@@ -3,10 +3,11 @@ import { AppConsumer } from "../context";
 import Denied from "./denied";
 import Empty from "./empty";
 import Preview from "./preview";
+import EmailError from "./email-error";
 
 const Inbox = () => (
   <AppConsumer>
-    {({ isAuthenticated, emails }) => {
+    {({ isAuthenticated, emails, removeEmail }) => {
       if (!isAuthenticated) {
         return <Denied />;
       }
@@ -18,7 +19,11 @@ const Inbox = () => (
       return (
         <ul className="inbox">
           {emails.map(email => {
-            return <Preview key={email.id} {...email} />;
+            return (
+              <EmailError key={email.id} removeBadEmail={() => removeEmail(email.id)}>
+                <Preview {...email} />
+              </EmailError>
+            );
           })}
         </ul>
       );

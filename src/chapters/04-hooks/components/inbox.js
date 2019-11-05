@@ -1,14 +1,14 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/auth-context";
-import { EmailContext } from "../context/email-context";
+import React from "react";
+import { useAuth } from "../context/auth-context";
+import { useEmail } from "../context/email-context";
 import Denied from "./denied";
 import Empty from "./empty";
 import Preview from "./preview";
 import EmailError from "./email-error";
 
 const Inbox = () => {
-  const { isAuthenticated } = useContext(AuthContext);
-  const { emails, removeEmail } = useContext(EmailContext);
+  const { isAuthenticated } = useAuth();
+  const { emails, removeEmail } = useEmail();
 
   if (!isAuthenticated) {
     return <Denied />;

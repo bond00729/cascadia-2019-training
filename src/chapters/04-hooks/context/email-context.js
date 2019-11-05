@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback, useMemo } from "react";
+import React, { createContext, useState, useEffect, useCallback, useMemo, useContext } from "react";
 import { generateEmail, fetchEmails } from "../../../utils/email";
 
 export const EmailContext = createContext({})
@@ -34,4 +34,12 @@ export function EmailProvider({ ...rest }) {
   return <EmailContext.Provider value={value} {...rest} />;
 }
 
-export function useEmail() {}
+export function useEmail() {
+  const context = useContext(EmailContext)
+  
+  if (!context) {
+    throw new Error("useEmail must be used within an EmailProvider");
+  }
+
+  return context;
+}

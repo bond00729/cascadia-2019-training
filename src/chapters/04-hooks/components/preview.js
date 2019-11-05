@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AppContext } from "../context";
+import { EmailContext } from "../context/email-context";
 import trash from "../../../assets/trash.png";
 
 export default function Preview({ id, name, title, body }) {
@@ -7,7 +7,7 @@ export default function Preview({ id, name, title, body }) {
   // if (name === "Taylor Swift") {
   //   throw new Error("Bad Blood");
   // }
-  const { removeEmail } = useContext(AppContext)
+  const { removeEmail } = useContext(EmailContext)
 
   return (
     <div className="preview">
